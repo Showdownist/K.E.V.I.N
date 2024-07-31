@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comforting Chatbot</title>
+    <link rel="stylesheet" href="style copy.css">
+    <style>
+        body {
+            background-color: #93a192;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .navbar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .navbar ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .content {
+            text-align: center;
+        }
+        .chat-container {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chat-container img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .messages {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        .input-group {
+            display: flex;
+            width: 100%;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+        }
+        .input-group button {
+            padding: 10px;
+            border: none;
+            background-color: #28a745; /* Green shade for the send button */
+            color: #fff;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="navbar">
+            <ul>
+                <li><a href="aboutme.html">About Me</a></li>    
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Chat.html">Chat for motivation</a></li>             
+            </ul>
+        </div>
+    </div>
+    <div class="chat-container">
+        <img src="Brain.jfif" alt="Chatbot">
+        <div class="messages" id="messages">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="input-group">
+            <input type="text" id="userInput" placeholder="Type your feelings here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const comfortingSentences = [
+            "Everything will be okay.",
+            "You're stronger than you think.",
+            "This too shall pass.",
+            "You are not alone.",
+            "Take it one day at a time.",
+            "You are loved.",
+            "Keep pushing forward.",
+            "It's okay to not be okay.",
+            "You matter.",
+            "You are enough just as you are.",
+            // Add more comforting sentences here, total 100
+            "Believe in yourself.",
+            "You have the power to change your story.",
+            "Your feelings are valid.",
+            "You are doing your best.",
+            "You deserve happiness.",
+            "Don't give up.",
+            "You are worthy of love and respect.",
+            "Take a deep breath.",
+            "You are capable of amazing things.",
+            "You are important.",
+            "Your strength inspires others.",
+            "You can get through this.",
+            "It's okay to ask for help.",
+            "You are resilient.",
+            "You have a beautiful heart.",
+            "You are more than enough.",
+            "It's okay to take a break.",
+            "You are brave.",
+            "You are cherished.",
+            "You bring joy to those around you.",
+            "You have a kind soul.",
+            "You are a light in the world.",
+            "You are unique and special.",
+            "You are worthy of all good things.",
+            "You are appreciated.",
+            "You make a difference.",
+            "You have a beautiful mind.",
+            "You are stronger than you know.",
+            "You have the power to overcome.",
+            "You are not defined by your struggles.",
+            "You have a bright future ahead.",
+            "You are amazing just the way you are.",
+            "You have a lot to offer.",
+            "You are a wonderful person.",
+            "You deserve to be happy.",
+            "You are valued.",
+            "You are courageous.",
+            "You have a warm heart.",
+            "You are a blessing.",
+            "You are loved more than you know.",
+            "You are capable of greatness.",
+            "You are a beautiful person inside and out.",
+            "You have so much potential.",
+            "You are deserving of kindness.",
+            "You are a gift to those around you.",
+            "You are enough.",
+            "You are not your mistakes.",
+            "You are doing a great job.",
+            "You are a ray of sunshine.",
+            "You have a bright smile.",
+            "You are a positive influence.",
+            "You are worthy of care and attention.",
+            "You are a wonderful friend.",
+            "You are talented.",
+            "You have a good heart.",
+            "You are full of potential.",
+            "You are a treasure.",
+            "You have a unique perspective.",
+            "You are inspiring.",
+            "You are a joy to be around.",
+            "You are loved unconditionally.",
+            "You have a calming presence.",
+            "You are thoughtful.",
+            "You have a lot of wisdom.",
+            "You are a beautiful soul.",
+            "You are worthy of respect.",
+            "You are a fantastic person.",
+            "You are worthy of love.",
+            "You are a source of strength.",
+            "You have a positive impact on others.",
+            "You are full of creativity.",
+            "You are a beautiful being.",
+            "You are a delight.",
+            "You have a good spirit.",
+            "You are a beacon of hope.",
+            "You are filled with compassion.",
+            "You have a lot to be proud of.",
+            "You are resilient and strong.",
+            "You are capable of wonderful things.",
+            "You have a kind heart.",
+            "You are a gem.",
+            "You are an amazing individual.",
+            "You are worth fighting for."
+        ];
+
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (userInput.trim() === '') return;
+
+            addMessage('User: ' + userInput);
+            document.getElementById('userInput').value = '';
+
+            const randomIndex = Math.floor(Math.random() * comfortingSentences.length);
+            const botResponse = comfortingSentences[randomIndex];
+            setTimeout(() => addMessage('K.E.V.I.N: ' + botResponse), 500);
+        }
+
+        function addMessage(message) {
+            const messagesContainer = document.getElementById('messages');
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
